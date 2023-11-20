@@ -1,34 +1,27 @@
+import { useEffect, useState } from "react";
+import ImageCard from "./components/ImageCard";
+
 function App() {
+  const [images, setImages] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [term, setTerm] = useState("flowers");
+
+  useEffect(() => {
+    fetch(
+      `https://pixabay.com/api/?key=${process.env.REACT_APP_PIXABAY_API_KEY}&q=${term}&image_type=photo`
+    )
+      .then((res) => res.json())
+      .then((data) => setImages(data.hits))
+      .catch((err) => console.log(err));
+  }, []);
+
   // tailwindcss(최신) 프로그램으로 app.css는 불필요 삭제
   return (
-    <div className="max-w-sm rounded overflow-hidden shadow-lg ">
-      <img src="https://source.unsplash.com/random" alt="" className="w-full" />
-      <div className="px-6 py-4">
-        <div className="font-bold text-purple-500 text-xl mb-2">
-          Photo by 홍길동
-        </div>
-        <ul>
-          <li>
-            <strong>Views: </strong> 4000
-          </li>
-          <li>
-            <strong>Downloads: </strong> 300
-          </li>
-          <li>
-            <strong>Likes: </strong> 400
-          </li>
-        </ul>
-      </div>
-      <div className="px-6 py-4">
-        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">
-          #tag1
-        </span>
-        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">
-          #tag2
-        </span>
-        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">
-          #tag3
-        </span>
+    <div className="container mx-auto my-7">
+      <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-7">
+        {images.map((image) => (
+          <ImageCard key={image.id} image={image} />
+        ))}
       </div>
     </div>
   );
